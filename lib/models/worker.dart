@@ -42,7 +42,7 @@ class Worker with ChangeNotifier {
   int exp = 0;
   int level = 1;
   int starLevel = 0;
-  int skillPoint = 0;
+  int skillPoint = 1;
 
   bool isHungry = false;
   bool isExhausted = false;
@@ -111,16 +111,9 @@ class Worker with ChangeNotifier {
   }
 
   void startTimer() {
-    const oneSec = const Duration(seconds: 2);
-    new Timer.periodic(oneSec, (Timer t) {
-      incrementTask1(0.1);
+    const oneTick = const Duration(milliseconds: 500);
+    new Timer.periodic(oneTick, (Timer t) {
       mainLoop();
-
-      if (task1 > 1.0) {
-        task1 = 0.0;
-        notifyListeners();
-        //return;
-      }
     });
   }
 
@@ -242,7 +235,7 @@ class Worker with ChangeNotifier {
       gatherHerbs(15);
       gatherStraw(45);
       gatherShinies(5);
-      gatherClay(10);
+      gatherClay(5);
       gatherSpores(10);
       gatherWorms(5);
     } else if (task == Task.Hunt) {
@@ -250,9 +243,9 @@ class Worker with ChangeNotifier {
       gatherFood();
       gatherShinies(5);
     } else if (task == Task.Dig) {
-      //digSpace();
+      digSpace();
       gatherShinies(5);
-      gatherClay(5);
+      gatherClay(20);
     } else if (task == Task.Tool1 ||
         task == Task.Tool2 ||
         task == Task.Tool3 ||
@@ -274,8 +267,12 @@ class Worker with ChangeNotifier {
       return 'Hunting';
     } else if (task == Task.Tool1 || task == Task.Tool2) {
       return 'Building Tool';
+    } else if (task == Task.WorkbenchT1) {
+      return 'Building Tool Workbench';
     } else if (task == Task.Weapon1 || task == Task.Weapon2) {
       return 'Building Weapon';
+    } else if (task == Task.WorkbenchW1) {
+      return 'Building Weapon Workbench';
     } else if (task == Task.Powder1 || task == Task.Powder2) {
       return 'Arcanery';
     } else if (task == Task.Potion1 || task == Task.Potion2) {
@@ -419,7 +416,11 @@ class Worker with ChangeNotifier {
         task == Task.Weapon1 ||
         task == Task.Weapon2 ||
         task == Task.Weapon3 ||
-        task == Task.Workbench1) {
+        task == Task.WorkbenchT1 ||
+        task == Task.WorkbenchT2 ||
+        task == Task.WorkbenchW1 ||
+        task == Task.WorkbenchW2 ||
+        task == Task.WorkbenchA1) {
       workerType = WorkerType.Builder;
     } else if (task == Task.Potion1 ||
         task == Task.Powder1 ||
@@ -470,10 +471,10 @@ class Worker with ChangeNotifier {
     }
   }
 
-  void incrementTask1(double val) {
-    task1 += val;
-    notifyListeners();
-  }
+  // void incrementTask1(double val) {
+  //   task1 += val;
+  //   notifyListeners();
+  // }
 
   doBuild() {
     if (buildOrder != null) {
@@ -965,10 +966,10 @@ class Worker with ChangeNotifier {
     int mod = 0;
 
     if (getStatModified(WorkerStatEnum.perception) > 35) {
-      mod += 2;
+      mod += 5;
     }
     if (getStatModified(WorkerStatEnum.strength) > 35) {
-      mod += 2;
+      mod += 5;
     }
 
     if (rand < (chance + mod)) {
@@ -998,6 +999,29 @@ class Worker with ChangeNotifier {
     }
   }
 
+  digSpace() {
+      int toolModifier = 0;
+      int rand = Random().nextInt(100) + 1;
+
+      this.setStatus(" is digging up some more space.", false);
+
+      this.doEquipTool();
+      this.didToolBreak(20);
+
+      if (this.tool1Equipped) {
+          toolModifier = 25;
+      } else {
+          toolModifier = -10;
+      }
+
+      if (rand < (getStatModified(WorkerStatEnum.strength) + toolModifier)) {
+          this.digRocks();
+          this.gatherShinies(5);
+          this.gatherOre(10);
+          inventory.updateInventoryItem(InventoryItemEnum.Space, 1);
+      }
+  }
+  
   digRocks() {
     int rand = Random().nextInt(3) + 1;
     int mod = 0;
@@ -1228,13 +1252,13 @@ class Worker with ChangeNotifier {
   }
 
   doExperienceGain(int value) {
-    int rand = Random().nextInt(7) + 1;
+    int rand = Random().nextInt(2) + 1;
     if (rand == 1) {
-      exp += value;
+      exp += value + 50;
     }
 
     if (exp > 99) {
-      exp = 0;
+      exp -= 100;
       skillPoint++;
       setStatus(" has gained a LEVEL!***", true);
       level++;
@@ -1267,7 +1291,7 @@ class Worker with ChangeNotifier {
     }
   }
 
-  doStarLevelBonus() {
+  void doStarLevelBonus() {
     setStatus(" has gained points in all stats!", true);
     modifyStat(WorkerStatEnum.dexterity, 1);
     modifyStat(WorkerStatEnum.focus, 1);
@@ -1280,6 +1304,47 @@ class Worker with ChangeNotifier {
     modifyStat(WorkerStatEnum.intelligence, 1);
     healthMax += 5;
   }
+
+    increaseStat(int stat) {
+        if (skillPoint > 0) {
+            if (stat == 1) {
+                modifyStat(WorkerStatEnum.focus, 1);
+            } else if (stat == 2) {
+                modifyStat(WorkerStatEnum.perception, 1);
+            } else if (stat == 3) {
+                modifyStat(WorkerStatEnum.strength, 1);
+            } else if (stat == 4) {
+                modifyStat(WorkerStatEnum.loyalty, 1);
+            } else if (stat == 5) {
+                modifyStat(WorkerStatEnum.constitution, 1);
+            } else if (stat == 6) {
+                modifyStat(WorkerStatEnum.cunning, 1);
+            } else if (stat == 7) {
+                modifyStat(WorkerStatEnum.intelligence, 1);
+            } else if (stat == 8) {
+                modifyStat(WorkerStatEnum.dexterity, 1);
+            } else if (stat == 9) {
+                modifyStat(WorkerStatEnum.spirit, 1);
+            } else if (stat == 10) {
+                modifyStat(WorkerStatEnum.health, 2);
+            }
+
+            this.skillPoint--;
+
+            notifyListeners();
+        }
+    }
+
+    void takeDamageHunting(int dmg) {
+        if (this.armor1Equipped) {
+            dmg -= 5;
+        }
+
+        if (dmg > 0) {
+          modifyStat(WorkerStatEnum.health, dmg * -1);
+          setStatus(" took damage while hunting!***", true);
+        }
+    }
 
       // *******************************
     // Tool, weapon and armor methods
@@ -1489,7 +1554,12 @@ enum Task {
   Weapon3,
   Armor1,
   Armor2,
-  Workbench1,
+  WorkbenchT1,
+  WorkbenchT2,
+  WorkbenchW1,
+  WorkbenchW2,
+  WorkbenchA1,
+  WorkbenchA2,
   Potion1,
   Potion2,
   Potion3,

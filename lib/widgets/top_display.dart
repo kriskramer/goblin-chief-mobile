@@ -99,7 +99,7 @@ class TopDisplay extends StatelessWidget {
                             SizedBox(width: 0, height: 15),
                             Text('Sticks'),
                             Text(inventory
-                                .inventoryItems[InventoryItemEnum.Rock.index]
+                                .inventoryItems[InventoryItemEnum.Stick.index]
                                 .toString()),
                             SizedBox(
                               width: 0,
@@ -119,8 +119,8 @@ class TopDisplay extends StatelessWidget {
                             SizedBox(
                               width: 0,
                             ),
-                            Text('Time:'),
-                            Text('Morning'),
+                            FittedBox(fit: BoxFit.contain, child: Text('Time:')),
+                            FittedBox(fit: BoxFit.contain, child: Text('Morning')),
                             Text(''),
                           ]),
                           TableRow(children: [

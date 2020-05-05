@@ -55,7 +55,7 @@ class _WorkerDisplayItemState extends State<WorkerDisplayItem> {
               ),
               borderRadius: BorderRadius.all(Radius.circular(5))),
           width: deviceWidth,
-          height: showExpandedDisplay ? 260 : 75,
+          height: showExpandedDisplay ? 260 : 90,
           child: Column(
             children: <Widget>[
               Container(
@@ -79,152 +79,172 @@ class _WorkerDisplayItemState extends State<WorkerDisplayItem> {
 }
 
 Widget showSummaryView(Worker worker, double deviceWidth, Function toggleFunction, bool showExpandedDisplay) {
-  return Row(
+  return Column(
     children: <Widget>[
-      // This is the goblin image at the left of the summary view
-      Card(
-        elevation: 2,
-        color: Colors.brown,
-        child: Container(
-          margin: EdgeInsets.all(1),
-          height: 50,
-          width: 40,
-          child: Column(
-            children: <Widget>[
-              Image(
-                image: AssetImage('assets/images/goblin1.jpg'),
-                fit: BoxFit.cover,
-              ),
-              Container(
-            width: 40,
-            child: LinearProgressIndicator(
-              value: worker.health * 0.01,
-              backgroundColor: Colors.grey,
-              valueColor: AlwaysStoppedAnimation(Colors.red),
-            ),
-          ),
-            ],
-          ),
-        ),
-      ),
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      Row(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(
-                // The goblin's name
-                worker.name,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+          // This is the goblin image at the left of the summary view
+          Card(
+            elevation: 2,
+            color: Colors.brown,
+            child: Container(
+              margin: EdgeInsets.all(1),
+              height: 45,
+              width: 40,
+              child: Stack(
+                children: <Widget>[
+                  Image(
+                    image: AssetImage('assets/images/goblin1.jpg'),
+                    fit: BoxFit.contain,
+                  ),
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                width: 40,
+                child: LinearProgressIndicator(
+                  value: worker.health * 0.01,
+                  backgroundColor: Colors.grey,
+                  valueColor: AlwaysStoppedAnimation(Colors.red),
                 ),
               ),
-              SizedBox(
-                width: 10,
+                ],
               ),
-              CurrentTaskDisplay(worker: worker),
-              SizedBox(
-                width: 20,
+            ),
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text(
+                    // The goblin's name
+                    worker.name,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(' (' + worker.level.toString() + ')'),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  CurrentTaskDisplay(worker: worker),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  worker.tool1Equipped ||
+                          worker.tool2Equipped ||
+                          worker.tool3Equipped
+                      ? Container(
+                          padding: EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[500],
+                              borderRadius: BorderRadius.all(Radius.circular(4))),
+                          child: Text(
+                            ' T ',
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        )
+                      : Container(),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  worker.weapon1Equipped ||
+                          worker.weapon2Equipped ||
+                          worker.weapon3Equipped
+                      ? Container(
+                          padding: EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                              color: Colors.red[500],
+                              borderRadius: BorderRadius.all(Radius.circular(4))),
+                          child: Text(
+                            ' W ',
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        )
+                      : Container(),
+                  SizedBox(
+                    width: 10,
+                  ),
+                ],
               ),
-              worker.tool1Equipped ||
-                      worker.tool2Equipped ||
-                      worker.tool3Equipped
-                  ? Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                          color: Colors.grey[500],
-                          borderRadius: BorderRadius.all(Radius.circular(4))),
-                      child: Text(
-                        ' T ',
-                        style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
-                      ),
-                    )
-                  : Container(),
-              SizedBox(
-                width: 10,
+              Row(children: <Widget>[
+                worker.starLevel >= 1 ? Icon(Icons.star, size: 10, color: Colors.green[800],) : SizedBox(width: 1,),
+                worker.starLevel >= 2 ? Icon(Icons.star, size: 10, color: Colors.green[800],) : SizedBox(width: 1,),
+                worker.starLevel >= 3 ? Icon(Icons.star, size: 10, color: Colors.green[800],) : SizedBox(width: 1,),
+                worker.starLevel >= 4 ? Icon(Icons.star, size: 10, color: Colors.green[800],) : SizedBox(width: 1,),
+                worker.starLevel >= 5 ? Icon(Icons.star, size: 10, color: Colors.green[800],) : SizedBox(width: 1,),
+                SizedBox(height: 10,),
+              ],),
+              Container(
+                width: deviceWidth - 120,
+                child: LinearProgressIndicator(
+                  value: worker.hunger * 0.01,
+                  backgroundColor: Colors.grey,
+                  valueColor: AlwaysStoppedAnimation(Colors.green),
+                ),
               ),
-              worker.weapon1Equipped ||
-                      worker.weapon2Equipped ||
-                      worker.weapon3Equipped
-                  ? Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                          color: Colors.red[500],
-                          borderRadius: BorderRadius.all(Radius.circular(4))),
-                      child: Text(
-                        ' W ',
-                        style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
-                      ),
-                    )
-                  : Container(),
-              SizedBox(
-                width: 10,
+              Container(
+                width: deviceWidth - 120,
+                child: LinearProgressIndicator(
+                  value: worker.fatigue * 0.01,
+                  backgroundColor: Colors.grey,
+                  valueColor: AlwaysStoppedAnimation(Colors.yellow),
+                ),
+              ),
+              Container(
+                width: deviceWidth - 120,
+                child: worker.buildOrder != null
+                    ? LinearProgressIndicator(
+                  value: worker.buildOrder.progress * 0.01,
+                  backgroundColor: Colors.grey,
+                  valueColor: AlwaysStoppedAnimation(Colors.lightBlue),
+                ) : null,
               ),
             ],
           ),
-          Text(
-            worker.status,
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-              //color: Colors.grey,
+          GestureDetector(
+            onTap: () => toggleFunction(),
+            child: Card(
+              elevation: 2,
+              color: Colors.green[700],
+              child: Container(
+                margin: EdgeInsets.all(1),
+                padding: EdgeInsets.all(3),
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 2,
+                      color: Colors.yellow,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                child: showExpandedDisplay ? Icon(Icons.arrow_upward, color: Colors.white) : Icon(Icons.arrow_downward, color: Colors.white),
+              ),
             ),
-          ),
-          Container(
-            width: deviceWidth - 120,
-            child: LinearProgressIndicator(
-              value: worker.hunger * 0.01,
-              backgroundColor: Colors.grey,
-              valueColor: AlwaysStoppedAnimation(Colors.green),
-            ),
-          ),
-          Container(
-            width: deviceWidth - 120,
-            child: LinearProgressIndicator(
-              value: worker.fatigue * 0.01,
-              backgroundColor: Colors.grey,
-              valueColor: AlwaysStoppedAnimation(Colors.yellow),
-            ),
-          ),
-          Container(
-            width: deviceWidth - 120,
-            child: worker.buildOrder != null
-                ? LinearProgressIndicator(
-              value: worker.buildOrder.progress * 0.01,
-              backgroundColor: Colors.grey,
-              valueColor: AlwaysStoppedAnimation(Colors.lightBlue),
-            ) : null,
           ),
         ],
       ),
-      GestureDetector(
-        onTap: () => toggleFunction(),
-        child: Card(
-          elevation: 2,
-          color: Colors.green[700],
-          child: Container(
-            margin: EdgeInsets.all(1),
-            padding: EdgeInsets.all(3),
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-                border: Border.all(
-                  width: 2,
-                  color: Colors.yellow,
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 4),
+          margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+          width: deviceWidth - 40,
+          decoration: BoxDecoration(border: Border.all(width: 1, color: Colors.grey)),
+          child: Text(
+                worker.status,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
+                  //color: Colors.grey,
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(5))),
-            child: showExpandedDisplay ? Icon(Icons.arrow_upward, color: Colors.white) : Icon(Icons.arrow_downward, color: Colors.white),
-          ),
+              ),
         ),
-      ),
     ],
   );
 }

@@ -232,29 +232,35 @@ class BuildOrder {
   }
 }
 
-
 class BuildOrderUtil {
   static bool doMaterialsCheck(Task task, Inventory inventory) {
-    // if (task == InventoryItemEnum.WorkbenchT1) {
-    //   minRocks = 20;
-    //   minStraw = 10;
-    //   minSticks = 10;
-    //   minTools1 = 1;
-    //   minClay = 5;
-    // } else if (task == InventoryItemEnum.WorkbenchW1) {
-    //   minRocks = 20;
-    //   minStraw = 10;
-    //   minSticks = 10;
-    //   minTools1 = 1;
-    //   minClay = 5;
-    // } else if (task == InventoryItemEnum.WorkbenchA1) {
-    //   minRocks = 25;
-    //   minStraw = 20;
-    //   minSticks = 20;
-    //   minTools1 = 2;
-    //   minClay = 10;
-    // } else if (task == InventoryItemEnum.Tool1) {
-    if (task == Task.Tool1) {
+    if (task == Task.WorkbenchT1) {
+      if (inventory.inventoryItems[InventoryItemEnum.Rock.index] >= 20 &&
+          inventory.inventoryItems[InventoryItemEnum.Stick.index] >= 10 &&
+          inventory.inventoryItems[InventoryItemEnum.Straw.index] >= 10 &&
+          inventory.inventoryItems[InventoryItemEnum.Tool1.index] >= 1 &&
+          inventory.inventoryItems[InventoryItemEnum.Clay.index] >= 20) {
+        return true;
+      }
+    } else if (task == Task.WorkbenchW1) {
+      if (inventory.inventoryItems[InventoryItemEnum.Rock.index] >= 20 &&
+          inventory.inventoryItems[InventoryItemEnum.Stick.index] >= 10 &&
+          inventory.inventoryItems[InventoryItemEnum.Straw.index] >= 10 &&
+          inventory.inventoryItems[InventoryItemEnum.Ore1.index] >= 10 &&
+          inventory.inventoryItems[InventoryItemEnum.Tool1.index] >= 1 &&
+          inventory.inventoryItems[InventoryItemEnum.Clay.index] >= 20) {
+        return true;
+      }
+    } else if (task == Task.WorkbenchA1) {
+      if (inventory.inventoryItems[InventoryItemEnum.Rock.index] >= 20 &&
+          inventory.inventoryItems[InventoryItemEnum.Stick.index] >= 10 &&
+          inventory.inventoryItems[InventoryItemEnum.Straw.index] >= 10 &&
+          inventory.inventoryItems[InventoryItemEnum.Ore1.index] >= 20 &&
+          inventory.inventoryItems[InventoryItemEnum.Tool1.index] >= 1 &&
+          inventory.inventoryItems[InventoryItemEnum.Clay.index] >= 20) {
+        return true;
+      }
+    } else if (task == Task.Tool1) {
       if (inventory.inventoryItems[InventoryItemEnum.Rock.index] >= 1 &&
           inventory.inventoryItems[InventoryItemEnum.Stick.index] >= 1 &&
           inventory.inventoryItems[InventoryItemEnum.Straw.index] >= 1) {
@@ -265,6 +271,7 @@ class BuildOrderUtil {
           inventory.inventoryItems[InventoryItemEnum.Stick.index] >= 3 &&
           inventory.inventoryItems[InventoryItemEnum.Clay.index] >= 1 &&
           inventory.inventoryItems[InventoryItemEnum.Straw.index] >= 3 &&
+          inventory.inventoryItems[InventoryItemEnum.WorkbenchT1.index] >= 1 &&
           inventory.inventoryItems[InventoryItemEnum.WorkbenchT1.index] >= 1) {
         return true;
       }
@@ -278,6 +285,7 @@ class BuildOrderUtil {
       if (inventory.inventoryItems[InventoryItemEnum.Rock.index] >= 3 &&
           inventory.inventoryItems[InventoryItemEnum.Stick.index] >= 4 &&
           inventory.inventoryItems[InventoryItemEnum.Clay.index] >= 1 &&
+          inventory.inventoryItems[InventoryItemEnum.WorkbenchW1.index] >= 1 &&
           inventory.inventoryItems[InventoryItemEnum.Ore1.index] >= 1) {
         return true;
       }
@@ -308,11 +316,10 @@ class BuildOrderUtil {
       }
     } else if (task == Task.Powder3) {
       if (inventory.inventoryItems[InventoryItemEnum.Herb.index] >= 4 &&
-        inventory.inventoryItems[InventoryItemEnum.Worm.index] >= 2 &&
-        inventory.inventoryItems[InventoryItemEnum.Blood.index] >= 2) {
+          inventory.inventoryItems[InventoryItemEnum.Worm.index] >= 2 &&
+          inventory.inventoryItems[InventoryItemEnum.Blood.index] >= 2) {
         return true;
       }
-
     } else if (task == Task.Ichor) {
       if (inventory.inventoryItems[InventoryItemEnum.Herb.index] >= 3 &&
           inventory.inventoryItems[InventoryItemEnum.Entrails.index] >= 1 &&
@@ -321,8 +328,8 @@ class BuildOrderUtil {
       }
     } else if (task == Task.Badge) {
       if (inventory.inventoryItems[InventoryItemEnum.Bone.index] >= 2 &&
-        inventory.inventoryItems[InventoryItemEnum.Teeth.index] >= 5 &&
-        inventory.inventoryItems[InventoryItemEnum.Clay.index] >= 2) {
+          inventory.inventoryItems[InventoryItemEnum.Teeth.index] >= 5 &&
+          inventory.inventoryItems[InventoryItemEnum.Clay.index] >= 2) {
         return true;
       }
       // Need another item or two...

@@ -8,6 +8,7 @@ class TaskButton extends StatelessWidget {
   final Worker worker;
   final bool canBuild;
   final BuildContext ctx;
+  final double buttonWidth;
 
   const TaskButton(
       {Key key,
@@ -15,6 +16,7 @@ class TaskButton extends StatelessWidget {
       this.ctx,
       this.buttonText,
       this.task,
+      this.buttonWidth,
       this.canBuild = false,
       this.worker})
       : super(key: key);
@@ -28,7 +30,7 @@ class TaskButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
-      width: 80,
+      width: buttonWidth != null ? buttonWidth : 80,
       height: 24,
       child: canBuild ? FlatButton(
         shape: new RoundedRectangleBorder(

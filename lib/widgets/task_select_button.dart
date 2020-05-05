@@ -218,30 +218,24 @@ Future<void> _showTaskSelectPopup(BuildContext context, Worker worker) {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           TaskButton(
-                            buttonText: 'Table',
+                            buttonText: 'Tool Workbench',
                             buttonColor: Colors.blue[500],
                             worker: worker,
-                            task: Task.Workbench1,
+                            canBuild: BuildOrderUtil.doMaterialsCheck(Task.WorkbenchT1, worker.inventory),
+                            task: Task.WorkbenchT1,
+                            buttonWidth: 120,
                             ctx: context,
                           ),
                           SizedBox(
                             width: 5,
                           ),
                           TaskButton(
-                            buttonText: 'Armor',
+                            buttonText: 'Weapon Workbench',
                             buttonColor: Colors.blue[500],
                             worker: worker,
-                            task: Task.Armor1,
-                            ctx: context,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          TaskButton(
-                            buttonText: 'Blah',
-                            buttonColor: Colors.blue[500],
-                            worker: worker,
-                            task: Task.Workbench1,
+                            canBuild: BuildOrderUtil.doMaterialsCheck(Task.WorkbenchW1, worker.inventory),
+                            task: Task.WorkbenchW1,
+                            buttonWidth: 120,
                             ctx: context,
                           ),
                         ]),
